@@ -150,15 +150,20 @@ const { data, error } = await client
     .maybeSingle();
 
 
-  if (error) {
+  
+if (error) {
     message("Login successful, but profile could not be loaded: " + error.message);
     return;
   }
 
   $("welcome").textContent =
-    "Hello, " + (data?.username || session.user.email) + "!";
+    "Hello, " + (data?.display_name || session.user.email) + "!";
+
+  $("lpPlayerName").textContent =
+    data?.display_name || session.user.email;
 
   show("dashboard");
+
 }
 
 async function logout() {
