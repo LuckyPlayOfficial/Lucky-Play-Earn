@@ -1,1 +1,190 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuckyPlay - Play & Enjoy</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #10151c;
+  color: #ffffff;
+}
+
+header {
+  background: #19232d;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  color: #65db83;
+}
+
+.hero {
+  text-align: center;
+  padding: 65px 20px 45px;
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  color: #b9c4ce;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 25px;
+  background: #19232d;
+  border-radius: 15px;
+}
+
+.container h2 {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 9px 0;
+  border: 1px solid #394653;
+  border-radius: 8px;
+  background: #10151c;
+  color: white;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #65db83;
+  color: #10151c;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.switch {
+  text-align: center;
+  color: #65db83;
+  cursor: pointer;
+  margin-top: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  color: #87939e;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🍀 LuckyPlay</div>
+  <div>DEMO</div>
+</header>
+
+<section class="hero">
+  <h1>Welcome to LuckyPlay!</h1>
+  <p>Play, enjoy and discover exciting games.</p>
+  <p>Your fun starts here!</p>
+</section>
+
+<div class="container" id="register">
+  <h2>Create Account</h2>
+
+  <input type="text" placeholder="Username">
+  <input type="email" placeholder="Email address">
+  <input type="password" placeholder="Password">
+
+  <button onclick="demoRegister()">
+    Register
+  </button>
+
+  <div class="switch" onclick="showLogin()">
+    Already have an account? Login
+  </div>
+</div>
+
+<div class="container hidden" id="login">
+  <h2>Welcome Back!</h2>
+
+  <input type="email" placeholder="Email address">
+  <input type="password" placeholder="Password">
+
+  <button onclick="demoLogin()">
+    Login
+  </button>
+
+  <div class="switch" onclick="showRegister()">
+    Create a new account
+  </div>
+</div>
+
+<div class="container hidden" id="dashboard">
+  <h2>Welcome to LuckyPlay!</h2>
+  <p style="text-align:center">
+    You are viewing the demo dashboard.
+  </p>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<footer>
+  © 2026 LuckyPlay Demo Website
+  <p>Prototype only. No real-money transactions.</p>
+</footer>
+
+<script>
+function showLogin() {
+  document.getElementById("register").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+}
+
+function showRegister() {
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("register").classList.remove("hidden");
+}
+
+function demoRegister() {
+  alert("This is a visual demo. Account registration is not connected yet.");
+}
+
+function demoLogin() {
+  alert("This is a visual demo. Login is not connected yet.");
+}
+
+function logout() {
+  document.getElementById("dashboard").classList.add("hidden");
+  showLogin();
+}
+</script>
+
+</body>
+</html>
