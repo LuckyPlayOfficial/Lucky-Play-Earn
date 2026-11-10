@@ -180,7 +180,63 @@ async function initialize() {
   if (data.session) await loadDashboard(data.session);
 }
 
+<!-- LUCKYPLAY DASHBOARD -->
+<div id="luckyDashboard" style="
+  display:none;
+  background:#100e20;
+  color:white;
+  min-height:100vh;
+  padding:22px;
+  font-family:Arial,sans-serif;
+">
+
+  <h1 style="color:#a78bfa;">🎮 LUCKYPLAY</h1>
+
+  <p style="color:#aaa;">WELCOME BACK!</p>
+  <h2>Hello, <span id="lpPlayerName">Player</span>! 👋</h2>
+
+  <div style="
+    background:linear-gradient(135deg,#7045c5,#30205d);
+    padding:24px;
+    border-radius:18px;
+    margin:25px 0;
+  ">
+    <p>YOUR GAME CREDITS</p>
+    <h1 style="color:white;">1,000</h1>
+    <small>Demo credits only</small>
+  </div>
+
+  <h3>CHOOSE YOUR GAME</h3>
+
+  <div style="
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  ">
+
+    <button onclick="lpDemo('Lucky Slots')">🎰<br>Lucky Slots</button>
+    <button onclick="lpDemo('Lucky Wheel')">🎡<br>Lucky Wheel</button>
+    <button onclick="lpDemo('Card Game')">🃏<br>Card Game</button>
+    <button onclick="lpDemo('Daily Bonus')">🎁<br>Daily Bonus</button>
+
+  </div>
+
+  <p style="margin-top:30px;text-align:center;">
+    🏠 Home　 🎮 Games　 👤 Profile
+  </p>
+
+</div>
+
+<script>
+function lpDemo(game) {
+  alert(game + " demo coming soon!");
+}
+</script>
+<!-- END LUCKYPLAY DASHBOARD -->
+
 initialize();
 </script>
 </body>
 </html>
+
+
