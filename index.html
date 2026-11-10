@@ -4,187 +4,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuckyPlay - Play & Enjoy</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LuckyPlay</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #10151c;
-  color: #ffffff;
-}
-
-header {
-  background: #19232d;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-size: 25px;
-  font-weight: bold;
-  color: #65db83;
-}
-
-.hero {
-  text-align: center;
-  padding: 65px 20px 45px;
-}
-
-.hero h1 {
-  font-size: 36px;
-  margin-bottom: 15px;
-}
-
-.hero p {
-  color: #b9c4ce;
-  line-height: 1.6;
-}
-
-.container {
-  max-width: 420px;
-  margin: 20px auto;
-  padding: 25px;
-  background: #19232d;
-  border-radius: 15px;
-}
-
-.container h2 {
-  text-align: center;
-}
-
-input {
-  width: 100%;
-  padding: 14px;
-  margin: 9px 0;
-  border: 1px solid #394653;
-  border-radius: 8px;
-  background: #10151c;
-  color: white;
-  font-size: 16px;
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border: none;
-  border-radius: 8px;
-  background: #65db83;
-  color: #10151c;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.switch {
-  text-align: center;
-  color: #65db83;
-  cursor: pointer;
-  margin-top: 18px;
-}
-
-.hidden {
-  display: none;
-}
-
-footer {
-  text-align: center;
-  padding: 30px 15px;
-  color: #87939e;
-  font-size: 13px;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#10151c;color:white;font-family:Arial,sans-serif}
+header{background:#19232d;padding:20px;text-align:center;color:#65db83;font-size:27px;font-weight:bold}
+main{max-width:430px;margin:35px auto;padding:20px}
+.card{background:#19232d;padding:25px;border-radius:15px}
+h2{text-align:center}
+p{color:#bac5cf;text-align:center}
+input{width:100%;padding:14px;margin:9px 0;border:1px solid #394653;border-radius:8px;background:#10151c;color:white;font-size:16px}
+button{width:100%;padding:14px;margin-top:12px;background:#65db83;color:#10151c;border:0;border-radius:8px;font-weight:bold;font-size:16px}
+.switch{color:#65db83;cursor:pointer;text-align:center;margin-top:20px}
+.hidden{display:none}
+#message{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+footer{text-align:center;color:#87939e;padding:20px;font-size:12px}
 </style>
 </head>
-
 <body>
 
-<header>
-  <div class="logo">🍀 LuckyPlay</div>
-  <div>DEMO</div>
-</header>
+<header>🍀 LuckyPlay</header>
 
-<section class="hero">
-  <h1>Welcome to LuckyPlay!</h1>
-  <p>Play, enjoy and discover exciting games.</p>
-  <p>Your fun starts here!</p>
-</section>
-
-<div class="container" id="register">
-  <h2>Create Account</h2>
-
-  <input type="text" placeholder="Username">
-  <input type="email" placeholder="Email address">
-  <input type="password" placeholder="Password">
-
-  <button onclick="demoRegister()">
-    Register
-  </button>
-
-  <div class="switch" onclick="showLogin()">
-    Already have an account? Login
-  </div>
+<main>
+<div class="card" id="register">
+<h2>Create Account</h2>
+<p>Join LuckyPlay Demo</p>
+<input id="regUsername" placeholder="Username" maxlength="30">
+<input id="regEmail" type="email" placeholder="Email address">
+<input id="regPassword" type="password" placeholder="Password (minimum 8 characters)">
+<button onclick="register()">Create Account</button>
+<div class="switch" onclick="showLogin()">Already registered? Login</div>
 </div>
 
-<div class="container hidden" id="login">
-  <h2>Welcome Back!</h2>
-
-  <input type="email" placeholder="Email address">
-  <input type="password" placeholder="Password">
-
-  <button onclick="demoLogin()">
-    Login
-  </button>
-
-  <div class="switch" onclick="showRegister()">
-    Create a new account
-  </div>
+<div class="card hidden" id="login">
+<h2>Welcome Back!</h2>
+<input id="loginEmail" type="email" placeholder="Email address">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<div class="switch" onclick="showRegister()">Create an account</div>
 </div>
 
-<div class="container hidden" id="dashboard">
-  <h2>Welcome to LuckyPlay!</h2>
-  <p style="text-align:center">
-    You are viewing the demo dashboard.
-  </p>
-  <button onclick="logout()">Logout</button>
+<div class="card hidden" id="dashboard">
+<h2>Welcome to LuckyPlay! 🍀</h2>
+<p id="welcome"></p>
+<p>Your demo account is active.</p>
+<button onclick="logout()">Logout</button>
 </div>
+
+<p id="message" role="status" aria-live="polite"></p>
+</main>
 
 <footer>
-  © 2026 LuckyPlay Demo Website
-  <p>Prototype only. No real-money transactions.</p>
+LuckyPlay © 2026<br>
+Demo prototype only. No real-money transactions.
 </footer>
 
 <script>
-function showLogin() {
-  document.getElementById("register").classList.add("hidden");
-  document.getElementById("login").classList.remove("hidden");
+const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
+const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+const configured =
+  SUPABASE_URL.startsWith("https://") &&
+  SUPABASE_URL.includes(".supabase.co") &&
+  SUPABASE_KEY.startsWith("sb_publishable_");
+
+const client = configured
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
+
+const $ = id => document.getElementById(id);
+
+function message(text) {
+  $("message").textContent = text;
 }
 
-function showRegister() {
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("register").classList.remove("hidden");
+function show(id) {
+  ["register","login","dashboard"].forEach(name =>
+    $(name).classList.toggle("hidden", name !== id)
+  );
+  message("");
 }
 
-function demoRegister() {
-  alert("This is a visual demo. Account registration is not connected yet.");
+function showLogin(){show("login")}
+function showRegister(){show("register")}
+
+async function register() {
+  if (!client) return message("Please configure your Supabase URL and Publishable Key.");
+
+  const username = $("regUsername").value.trim();
+  const email = $("regEmail").value.trim();
+  const password = $("regPassword").value;
+
+  if (!username || !email || password.length < 8) {
+    return message("Enter a username, valid email and password of at least 8 characters.");
+  }
+
+  message("Creating your account...");
+
+  const {data,error} = await client.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {username},
+      emailRedirectTo: "https://luckyplayofficial.github.io/Lucky-Play-Earn/"
+    }
+  });
+
+  if (error) return message(error.message);
+
+  if (data.session) {
+    await loadDashboard(data.session);
+  } else {
+    message("Registration successful! Please check your email and verify your account before logging in.");
+  }
 }
 
-function demoLogin() {
-  alert("This is a visual demo. Login is not connected yet.");
+async function login() {
+  if (!client) return message("Please configure your Supabase URL and Publishable Key.");
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  message("Logging in...");
+
+  const {data,error} = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) return message(error.message);
+
+  await loadDashboard(data.session);
 }
 
-function logout() {
-  document.getElementById("dashboard").classList.add("hidden");
-  showLogin();
+async function loadDashboard(session) {
+  if (!session) return showLogin();
+
+  const {data,error} = await client
+    .from("profiles")
+    .select("username")
+    .eq("id",session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    message("Login successful, but profile could not be loaded: " + error.message);
+    return;
+  }
+
+  $("welcome").textContent =
+    "Hello, " + (data?.username || session.user.email) + "!";
+
+  show("dashboard");
 }
+
+async function logout() {
+  const {error} = await client.auth.signOut();
+  if (error) return message(error.message);
+  show("login");
+  message("You have logged out.");
+}
+
+async function initialize() {
+  if (!configured) {
+    return message("Setup needed: add your Supabase Project URL and Publishable Key in the code.");
+  }
+
+  const {data,error} = await client.auth.getSession();
+
+  if (error) return message(error.message);
+
+  if (data.session) await loadDashboard(data.session);
+}
+
+initialize();
 </script>
-
 </body>
 </html>
