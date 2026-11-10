@@ -1,1 +1,370 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuckyPlay</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101827;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 390px;
+  background: #1c293c;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px #0005;
+}
+
+h1 {
+  text-align: center;
+  color: #38d99b;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #b8c4d5;
+  margin-bottom: 25px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 9px 0;
+  border: 1px solid #40516a;
+  border-radius: 9px;
+  background: #101827;
+  color: white;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 9px;
+  background: #25c98b;
+  color: #10251d;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .5;
+}
+
+.secondary {
+  background: #34445b;
+  color: white;
+}
+
+.message {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #ffb5b5;
+  overflow-wrap: anywhere;
+}
+
+.hidden { display: none; }
+
+#dashboard {
+  text-align: center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div id="authSection">
+
+    <h1>🍀 LuckyPlay</h1>
+    <p class="subtitle">Welcome to LuckyPlay Demo</p>
+
+    <div id="loginForm">
+      <h3>Login</h3>
+
+      <input id="loginEmail" type="email"
+        placeholder="Email address">
+
+      <input id="loginPassword" type="password"
+        placeholder="Password">
+
+      <button id="loginBtn" onclick="login()">
+        Login
+      </button>
+
+      <button class="secondary"
+        onclick="showRegister()">
+        Create Account
+      </button>
+    </div>
+
+    <div id="registerForm" class="hidden">
+      <h3>Create Account</h3>
+
+      <input id="regDisplayName" type="text"
+        placeholder="Display Name">
+
+      <input id="regEmail" type="email"
+        placeholder="Email address">
+
+      <input id="regPassword" type="password"
+        placeholder="Password (minimum 6 characters)">
+
+      <button id="registerBtn" onclick="register()">
+        Register
+      </button>
+
+      <button class="secondary"
+        onclick="showLogin()">
+        Back to Login
+      </button>
+    </div>
+
+    <div id="message" class="message"></div>
+
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <h1>🍀 LuckyPlay</h1>
+    <h2>Welcome!</h2>
+    <h3 id="welcomeName"></h3>
+
+    <p>You are successfully logged in.</p>
+    <p>LuckyPlay Demo Dashboard</p>
+
+    <button onclick="logout()">Logout</button>
+  </div>
+
+</div>
+
+<script>
+
+// SUPABASE CONFIGURATION
+
+const SUPABASE_URL =
+  "https://zyuzgbnwqrxognxnryyh.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_wc9qFPveIuG274OhWOPqcQ_7TaINZkL";
+
+let client = null;
+
+try {
+  if (window.supabase &&
+      SUPABASE_URL.startsWith("https://") &&
+      SUPABASE_KEY.startsWith("sb_publishable_")) {
+
+    client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+  }
+} catch (error) {
+  console.error(error);
+}
+
+// ELEMENTS
+
+const $ = id => document.getElementById(id);
+
+function message(text, success = false) {
+  $("message").style.color =
+    success ? "#38d99b" : "#ffb5b5";
+
+  $("message").textContent = text;
+}
+
+function showLogin() {
+  $("loginForm").classList.remove("hidden");
+  $("registerForm").classList.add("hidden");
+  message("");
+}
+
+function showRegister() {
+  $("loginForm").classList.add("hidden");
+  $("registerForm").classList.remove("hidden");
+  message("");
+}
+
+function showDashboard(name) {
+  $("authSection").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+  $("welcomeName").textContent = name || "Player";
+}
+
+function showAuth() {
+  $("dashboard").classList.add("hidden");
+  $("authSection").classList.remove("hidden");
+  showLogin();
+}
+
+// CHECK CONNECTION
+
+function checkClient() {
+  if (!client) {
+    message("Supabase configuration is missing. Check your URL and Publishable Key.");
+    return false;
+  }
+  return true;
+}
+
+// REGISTER
+
+async function register() {
+  if (!checkClient()) return;
+
+  const name = $("regDisplayName").value.trim();
+  const email = $("regEmail").value.trim();
+  const password = $("regPassword").value;
+
+  if (!name || !email || !password) {
+    return message("Please complete all fields.");
+  }
+
+  if (password.length < 6) {
+    return message("Password must be at least 6 characters.");
+  }
+
+  const btn = $("registerBtn");
+  btn.disabled = true;
+  btn.textContent = "Creating account...";
+
+  try {
+    const { data, error } =
+      await client.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            display_name: name
+          }
+        }
+      });
+
+    if (error) throw error;
+
+    if (data.session) {
+      showDashboard(name);
+      message("");
+    } else {
+      message("Registration successful! Please check your email to confirm your account.", true);
+      showLogin();
+    }
+
+  } catch (error) {
+    message(error.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Register";
+  }
+}
+
+// LOGIN
+
+async function login() {
+  if (!checkClient()) return;
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  if (!email || !password) {
+    return message("Please enter your email and password.");
+  }
+
+  const btn = $("loginBtn");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
+
+  try {
+    const { data, error } =
+      await client.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+    if (error) throw error;
+
+    const name =
+      data.user.user_metadata?.display_name || "Player";
+
+    message("");
+    showDashboard(name);
+
+  } catch (error) {
+    message(error.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Login";
+  }
+}
+
+// LOGOUT
+
+async function logout() {
+  if (!client) return;
+
+  const { error } = await client.auth.signOut();
+
+  if (error) {
+    message(error.message);
+    return;
+  }
+
+  showAuth();
+}
+
+// RESTORE SESSION
+
+async function initialize() {
+  if (!client) {
+    message("Please configure your Supabase URL and Publishable Key.");
+    return;
+  }
+
+  const { data, error } =
+    await client.auth.getSession();
+
+  if (error) {
+    message(error.message);
+    return;
+  }
+
+  if (data.session) {
+    const name =
+      data.session.user.user_metadata?.display_name || "Player";
+
+    showDashboard(name);
+  }
+}
+
+initialize();
+
+</script>
+
+</body>
+</html>
