@@ -91,7 +91,28 @@ button:disabled {
 #dashboard {
   text-align: center;
 }
+.game-card {
+  background: #263A50;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
 
+.game-card h1 {
+  font-size: 35px;
+}
+
+.games {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.games button {
+  min-height: 90px;
+  margin: 0;
+}
 </style>
 </head>
 
@@ -148,17 +169,42 @@ button:disabled {
     <div id="message" class="message"></div>
 
   </div>
+<div id="dashboard" class="hidden">
+  <h1>🍀 LuckyPlay</h1>
 
-  <div id="dashboard" class="hidden">
-    <h1>🍀 LuckyPlay</h1>
-    <h2>Welcome!</h2>
-    <h3 id="welcomeName"></h3>
+  <h2>Welcome, <span id="welcomeName">Player</span>!</h2>
 
-    <p>You are successfully logged in.</p>
-    <p>LuckyPlay Demo Dashboard</p>
-
-    <button onclick="logout()">Logout</button>
+  <div class="game-card">
+    <p>YOUR DEMO CREDITS</p>
+    <h1>1,000</h1>
+    <small>Demo points only</small>
   </div>
+
+  <h3>Choose Your Game</h3>
+
+  <div class="games">
+    <button onclick="openGame('Memory Match')">
+      🧠 Memory Match
+    </button>
+
+    <button onclick="openGame('Lucky Quiz')">
+      🎯 Lucky Quiz
+    </button>
+
+    <button onclick="openGame('Daily Challenge')">
+      🏆 Daily Challenge
+    </button>
+
+    <button onclick="openGame('Achievements')">
+      🎁 Achievements
+    </button>
+  </div>
+
+  <p id="gameMessage"></p>
+
+  <button class="secondary" onclick="logout()">
+    Logout
+  </button>
 
 </div>
 
@@ -361,7 +407,10 @@ async function initialize() {
     showDashboard(name);
   }
 }
-
+function openGame(name) {
+  $("gameMessage").textContent =
+    name + " demo is coming soon!";
+}
 initialize();
 
 </script>
