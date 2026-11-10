@@ -142,11 +142,13 @@ async function login() {
 async function loadDashboard(session) {
   if (!session) return showLogin();
 
-  const {data,error} = await client
+  
+const { data, error } = await client
     .from("profiles")
-    .select("username")
-    .eq("id",session.user.id)
+    .select("display_name")
+    .eq("id", session.user.id)
     .maybeSingle();
+
 
   if (error) {
     message("Login successful, but profile could not be loaded: " + error.message);
